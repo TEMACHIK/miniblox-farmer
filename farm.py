@@ -72,5 +72,5 @@ if __name__ == "__main__":
         print(f"\n--- Итерация #{count} ---")
         run_ad_chain()
         count += 1
-        print("Пауза 3 секунды перед следующим кругом...")
-        time.sleep(3)
+        print("Пауза 10 секунды перед следующим кругом...")
+        time.sleep(10)
