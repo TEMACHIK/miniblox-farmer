@@ -1,28 +1,30 @@
-# name: Run Python Script 24/7
+name: Ad Reward Collector
 
-# on:
-#   workflow_dispatch: # Позволяет запускать скрипт вручную кнопкой через вкладку Actions
-#   schedule:
-#     - cron: '0 */6 * * *' # Автоматический перезапуск робота каждые 6 часов
+on:
+  # Запуск по расписанию (каждые 6 часов)
+  schedule:
+    - cron: '0 */6 * * *'
+  # Кнопка для ручного запуска из вкладки Actions
+  workflow_dispatch:
 
-# jobs:
-#   run-script:
-#     runs-on: ubuntu-latest # Запуск на чистой ОС Linux
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3 # Скачиваем файлы из твоего репозитория
+jobs:
+  run-ad-farm:
+    runs-on: ubuntu-latest
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v4 # Устанавливаем Python
-#         with:
-#           python-version: '3.10'
+    steps:
+      - name: Чтение кода репозитория
+        uses: actions/checkout@v4
 
-#       - name: Install dependencies
-#         run: pip install requests # Устанавливаем библиотеку для запросов
+      - name: Настройка Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
 
-#       - name: Run Script
-#         env:
-#           AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }} # Передаем скрытый токен из настроек репозитория
-#           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }} # Передаем URL вебхука Discord
-#           PYTHONUNBUFFERED: 1 # Отключаем задержку логов (вывод будет идти в реальном времени)
-#         run: python main.py # Запуск твоего Python-файла (убедись, что он называется именно main.py)
+      - name: Установка зависимостей
+        run: pip install -r requirements.txt
+
+      - name: Запуск скрипта
+        env:
+          COOKIE_HEADER: ${{ secrets.COOKIE_HEADER }}
+        run: python farm.py
