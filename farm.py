@@ -28,7 +28,7 @@ def run_task():
         session.post("https://miniblox.io/auth-api/metrics/ad_event", json={"kind": "rewarded", "phase": "shown"})
         
         # 3. Ожидание показа (35 секунд)
-        time.sleep(35)
+        time.sleep(5)
 
         # 4. Метрика completed
         session.post("https://miniblox.io/auth-api/metrics/ad_event", json={"kind": "rewarded", "phase": "completed"})
