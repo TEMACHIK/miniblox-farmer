@@ -45,7 +45,7 @@ def run_ad_chain():
 
         # 3. Тайм-аут просмотра рекламы (35 секунд)
         print("3. Ожидание окончания просмотра рекламы (35 секунд)...")
-        time.sleep(35)
+        time.sleep(10)
 
         # 4. Отправка метрики: completed
         print("4. Отправка метрики: phase = completed...")
@@ -65,7 +65,12 @@ def run_ad_chain():
 
     except Exception as e:
         print(f"Произошла ошибка во время выполнения: {e}")
-        exit(1)
 
 if __name__ == "__main__":
-    run_ad_chain()
+    count = 1
+    while True:
+        print(f"\n--- Итерация #{count} ---")
+        run_ad_chain()
+        count += 1
+        print("Пауза 3 секунды перед следующим кругом...")
+        time.sleep(3)
