@@ -1,30 +1,30 @@
-name: Ad Reward Collector
+# name: Ad Reward Collector
 
-on:
-  # Запуск по расписанию (каждые 6 часов)
-  schedule:
-    - cron: '0 */6 * * *'
-  # Кнопка для ручного запуска из вкладки Actions
-  workflow_dispatch:
+# on:
+#   # Запуск по расписанию (каждые 6 часов)
+#   schedule:
+#     - cron: '0 */6 * * *'
+#   # Кнопка для ручного запуска из вкладки Actions
+#   workflow_dispatch:
 
-jobs:
-  run-ad-farm:
-    runs-on: ubuntu-latest
+# jobs:
+#   run-ad-farm:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Чтение кода репозитория
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Чтение кода репозитория
+#         uses: actions/checkout@v4
 
-      - name: Настройка Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
+#       - name: Настройка Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: '3.11'
+#           cache: 'pip'
 
-      - name: Установка зависимостей
-        run: pip install -r requirements.txt
+#       - name: Установка зависимостей
+#         run: pip install -r requirements.txt
 
-      - name: Запуск скрипта
-        env:
-          COOKIE_HEADER: ${{ secrets.COOKIE_HEADER }}
-        run: python farm.py
+#       - name: Запуск скрипта
+#         env:
+#           COOKIE_HEADER: ${{ secrets.COOKIE_HEADER }}
+#         run: python farm.py
